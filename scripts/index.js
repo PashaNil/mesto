@@ -10,15 +10,17 @@ const popupForm = document.querySelector(".popup__form");
 const inputName = document.querySelector("#name");
 //Присваиваем и находим форму работы
 const inputjob = document.querySelector("#job");
-//Присваиваем и находим кнопку отправки формы
-const btnSaveForm = document.querySelector(".popup__button-save");
+//Присваиваем и находим заголовок в profile
+titleName = document.querySelector(".profile__title");
+//Присваиваем и находим подзаголовок в profile
+subtitleJob = document.querySelector(".profile__subtitle");
 
 //Открытие попапа редактирования профиля
 function openPopupProfile() {
   popupProfile.classList.add("popup_opened");
   //Присваиваем формам значения заголовка и текста
-  inputName.value = document.querySelector(".profile__title").textContent;
-  inputjob.value = document.querySelector(".profile__subtitle").textContent;
+  inputName.value = titleName.textContent;
+  inputjob.value = subtitleJob.textContent;
 }
 //Закрывает попап при нажатии крестика
 function closePopupProfile() {
@@ -27,8 +29,8 @@ function closePopupProfile() {
 //Сохраняет значения в заголовок и текст и закрывает попап
 function setForm(evt) {
   evt.preventDefault();
-  document.querySelector(".profile__title").textContent = inputName.value;
-  document.querySelector(".profile__subtitle").textContent = inputjob.value;
+  titleName.textContent = inputName.value;
+  subtitleJob.textContent = inputjob.value;
   closePopupProfile();
 }
 
@@ -43,4 +45,4 @@ popupProfile.addEventListener("click", function (event) {
   }
 })
 //Слушатель на кнопку сохранения попапа
-btnSaveForm.addEventListener("click", setForm);
+popupForm.addEventListener("submit", setForm);

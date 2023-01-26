@@ -8,6 +8,11 @@
   background-size: cover;
   border: none;
   cursor: pointer;
+  transition: opacity .5s linear;
+}
+
+.element__like-button:hover {
+  opacity: .5;
 }
 
 .element__like-button:active {

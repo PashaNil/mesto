@@ -9,8 +9,9 @@
   gap: 20px 17px;
 }
 
-@media screen and (max-width:577px) {
+@media screen and (max-width:600px) {
   .elements {
     column-gap: 0;
+    padding-top: 36px;
   }
 }
