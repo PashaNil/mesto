@@ -14,28 +14,33 @@ const inputjob = document.querySelector("#job");
 const btnSaveForm = document.querySelector(".popup__button-save");
 
 //Открытие попапа редактирования профиля
-popupBtnEdit.addEventListener("click", openPopupProfile);
 function openPopupProfile() {
   popupProfile.classList.add("popup_opened");
+  //Присваиваем формам значения заголовка и текста
+  inputName.value = document.querySelector(".profile__title").textContent;
+  inputjob.value = document.querySelector(".profile__subtitle").textContent;
 }
-//Закрытие попапа редактирования профиля
-popupBtnCloseProfile.addEventListener("click", closePopupProfile);
+//Закрывает попап при нажатии крестика
 function closePopupProfile() {
   popupProfile.classList.remove("popup_opened");
 }
-//Закрытие попапа профиля нажатием вне попапа
+//Сохраняет значения в заголовок и текст и закрывает попап
+function setForm(evt) {
+  evt.preventDefault();
+  document.querySelector(".profile__title").textContent = inputName.value;
+  document.querySelector(".profile__subtitle").textContent = inputjob.value;
+  closePopupProfile();
+}
+
+//Слушатель на кнопку открытия попапа
+popupBtnEdit.addEventListener("click", openPopupProfile);
+//Слушатель на кнопку закрытия попапа по крестику
+popupBtnCloseProfile.addEventListener("click", closePopupProfile);
+//Слушатель и функция закрытия попапа профиля нажатием вне попапа
 popupProfile.addEventListener("click", function (event) {
   if (event.target === event.currentTarget) {
     closePopupProfile();
   }
 })
-//Присваиваем формам значения заголовка и текста
-inputName.value = document.querySelector(".profile__title").textContent;
-inputjob.value = document.querySelector(".profile__subtitle").textContent;
-//По клику по кнопке формы сохраняет значения в заголовок и текст.
+//Слушатель на кнопку сохранения попапа
 btnSaveForm.addEventListener("click", setForm);
-function setForm(evt) {
-  evt.preventDefault();
-  document.querySelector(".profile__title").textContent = inputName.value;
-  document.querySelector(".profile__subtitle").textContent = inputjob.value;
-}

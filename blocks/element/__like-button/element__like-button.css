@@ -9,3 +9,7 @@
   border: none;
   cursor: pointer;
 }
+
+.element__like-button:active {
+  background-image: url(../../../../images/like-button-active.svg);
+}
