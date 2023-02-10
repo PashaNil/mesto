@@ -43,7 +43,7 @@ const titleName = document.querySelector(".profile__title");
 const subtitleJob = document.querySelector(".profile__subtitle");
 
 // Присваеваем и находим popup figure
-const popupFigure = document.querySelector(".popup__card-image");
+const popupFigure = document.querySelector(".popup_type_card-image");
 // Присваеваем и находим кнопку закрытия figure
 const popupBtnCloseFigure = document.querySelector(".popup__close-icon_type_card-image");
 // Присваеваем и находим картинку figure
