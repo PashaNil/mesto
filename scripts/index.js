@@ -25,12 +25,15 @@ const initialCards = [
   }
 ];
 
+// Присваиваем и находим все кнопки крестика закрытия попапов на странице
+const closeButtons = document.querySelectorAll(".popup__close-icon")
+// Присваиваем и находим все попыпы на странице
+const popups = document.querySelectorAll(".popup");
+
 // Присваиваем и находим popup profile
 const popupProfile = document.querySelector(".popup_type_profile");
 // Присваиваем и находим кнопку редактирования
 const popupBtnEdit = document.querySelector(".profile__edit-button");
-// Присваиваем и находим кнопку закрытия
-const popupBtnCloseProfile = document.querySelector(".popup__close-icon_type_profile");
 //Присваиваем и находим форму с информацией profile
 const popupFormProfile = document.querySelector(".popup__form_type_profile");
 //Присваиваем и находим input имени
@@ -44,8 +47,6 @@ const subtitleJob = document.querySelector(".profile__subtitle");
 
 // Присваеваем и находим popup figure
 const popupFigure = document.querySelector(".popup_type_card-image");
-// Присваеваем и находим кнопку закрытия figure
-const popupBtnCloseFigure = document.querySelector(".popup__close-icon_type_card-image");
 // Присваеваем и находим картинку figure
 const cardFigureImg = document.querySelector(".popup__figure-img");
 // Присваеваем и находим описание картинки figure
@@ -55,8 +56,6 @@ const cardFigureCaption = document.querySelector(".popup__figurecaption");
 const popupAddCards = document.querySelector(".popup_type_add-cards");
 // Присваиваем и находим кнопку добавления карточек
 const popupBtnAddCards = document.querySelector('.profile__add-button');
-// Присваиваем и находим кнопку закрытия
-const popupBtnCloseAddCards = document.querySelector(".popup__close-icon_type_add-cards");
 // Присваиваем и находим форму add-cards
 const popupFormAddCards = document.querySelector(".popup__form_type_add-cards");
 // Присваиваем и находим input названия карточки
@@ -69,42 +68,62 @@ const templateElement = document.querySelector(".template-element").content.quer
 // Присваиваем и находим секцию elements
 const sectionElements = document.querySelector(".elements");
 
-//Функция принимающая начальный массив для добавления карточек на сайт
-function elementCard(arrayCard) {
-  arrayCard.forEach((itemCard) => {
-    creatCard(itemCard)
-  })
+//Функция принимающая начальный массив, переберая его передает элементы {} в creatCard
+function renderCards(arrayCard) {
+  arrayCard.forEach(createCard)
 }
 
-// Функция принимающая элемент {} массива для добавления карточек на сайт
-function creatCard(item) {
+// Функция принимающая элемент и отправляющая его в getCard, затем возвращает и добавляет на страничку
+function createCard(item) {
+  const card = getCard(item)
+  sectionElements.prepend(card);
+}
+
+//Функция принимающая элемент, далее форматирует его.
+function getCard(item) {
   const card = templateElement.cloneNode(true);
+  const maskGroup = card.querySelector(".element__mask-group");
+  const likeButton = card.querySelector(".element__like-button");
   card.querySelector(".element__title").textContent = item.name;
-  card.querySelector(".element__mask-group").alt = item.name;
-  card.querySelector(".element__mask-group").src = item.link;
+  maskGroup.alt = item.name;
+  maskGroup.src = item.link;
   card.querySelector(".element__trash-button").addEventListener("click", () => {
     card.remove();
   })
-  card.querySelector(".element__like-button").addEventListener("click", () => {
-    card.querySelector(".element__like-button").classList.toggle("element__like-button_active");
+  likeButton.addEventListener("click", () => {
+    likeButton.classList.toggle("element__like-button_active");
   })
-  card.querySelector(".element__mask-group").addEventListener("click", () => {
+  maskGroup.addEventListener("click", () => {
     openPopup(popupFigure)
     cardFigureImg.src = item.link;
     cardFigureImg.alt = item.name;
     cardFigureCaption.textContent = item.name;
   })
-  sectionElements.prepend(card);
+  return card
 }
 
-//Функция открытия всех попапов
+// Функция открытия всех попапов
 function openPopup(popupElement) {
   popupElement.classList.add('popup_opened');
 }
-//Функция закрытия всех попапов  нажатием крестика
-function closePopup(popupCloseElement) {
-  popupCloseElement.classList.remove("popup_opened");
+
+// Функция закрытия попапов, принимающая адресс попапа с крестиком
+function closePopup(popup) {
+  popup.classList.remove("popup_opened");
 }
+
+// Функция перебора псевдомассива с попапами страницы, добавляющая в них слушатель
+// В слушателях проверка: если в кликнутом обьекте есть указанный класс, то вызывается функция закрытия с переданным попапом.
+popups.forEach((popup) => {
+  popup.addEventListener("mousedown", (evt) => {
+    if (evt.target.classList.contains("popup_opened")) {
+      closePopup(popup)
+    }
+    if (evt.target.classList.contains('popup__close-icon')) {
+      closePopup(popup)
+    }
+  })
+})
 
 //Слушатели на открытие попапов
 popupBtnEdit.addEventListener('click', function () {
@@ -115,34 +134,6 @@ popupBtnEdit.addEventListener('click', function () {
 popupBtnAddCards.addEventListener('click', function () {
   openPopup(popupAddCards);
 });
-
-// Слушатели на закрытие попапов крестиком
-popupBtnCloseProfile.addEventListener("click", () => {
-  closePopup(popupProfile)
-});
-popupBtnCloseAddCards.addEventListener("click", () => {
-  closePopup(popupAddCards)
-});
-popupBtnCloseFigure.addEventListener("click", () => {
-  closePopup(popupFigure);
-})
-
-// Слушатели на закрытия попапов вне попапа
-popupProfile.addEventListener("click", function (event) {
-  if (event.target === event.currentTarget) {
-    closePopup(popupProfile);
-  }
-})
-popupAddCards.addEventListener("click", function (event) {
-  if (event.target === event.currentTarget) {
-    closePopup(popupAddCards);
-  }
-})
-popupFigure.addEventListener("click", function (event) {
-  if (event.target === event.currentTarget) {
-    closePopup(popupFigure);
-  }
-})
 
 //Слушатель активации формы profile
 popupFormProfile.addEventListener("submit", (evt) => {
@@ -155,11 +146,11 @@ popupFormProfile.addEventListener("submit", (evt) => {
 // Слушатель активации формы addCard
 popupFormAddCards.addEventListener("submit", (evt) => {
   evt.preventDefault();
-  creatCard({ name: inputCardTitle.value, link: inputCardLink.value });
+  createCard({ name: inputCardTitle.value, link: inputCardLink.value });
   closePopup(popupAddCards);
-  inputCardTitle.value = "";
-  inputCardLink.value = "";
+  evt.target.reset(); // Сбрасывает поля формы после отправки.
+
 })
 
 // Вызов функции с передачей массива
-elementCard(initialCards);
+renderCards(initialCards);
