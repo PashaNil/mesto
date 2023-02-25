@@ -68,6 +68,15 @@ const templateElement = document.querySelector(".template-element").content.quer
 // Присваиваем и находим секцию elements
 const sectionElements = document.querySelector(".elements");
 
+const configForm = {
+  formSelector: '.popup__form',
+  inputSelector: '.popup__input',
+  submitButtonSelector: '.popup__button',
+  inactiveButtonClass: 'popup__button_disabled',
+  inputErrorClass: 'popup__input_type_error',
+  errorClass: 'popup__input-error_visible'
+};
+
 //Функция принимающая начальный массив, переберая его передает элементы {} в creatCard
 function renderCards(arrayCard) {
   arrayCard.forEach(createCard)
@@ -102,17 +111,19 @@ function getCard(item) {
   return card
 }
 
-// Функция открытия всех попапов
+// Функция открытия всех попапов со слушателем нажатия кнопки
 function openPopup(popupElement) {
   popupElement.classList.add('popup_opened');
+  document.addEventListener("keydown", keydownEsc)
 }
 
-// Функция закрытия попапов, принимающая адресс попапа с крестиком
+// Функция закрытия всех попапов с удалением слушателя
 function closePopup(popup) {
   popup.classList.remove("popup_opened");
+  document.removeEventListener("keydown", keydownEsc)
 }
 
-// Функция перебора псевдомассива с попапами страницы, добавляющая в них слушатель
+// Перебор псевдомассива с попапами страницы, добавляющая в них слушатель
 // В слушателях проверка: если в кликнутом обьекте есть указанный класс, то вызывается функция закрытия с переданным попапом.
 popups.forEach((popup) => {
   popup.addEventListener("mousedown", (evt) => {
@@ -125,7 +136,15 @@ popups.forEach((popup) => {
   })
 })
 
-//Слушатели на открытие попапов
+// Функция закрытие попапа по нажатию esc
+function keydownEsc(evt) {
+  if (evt.key === "Escape") {
+    const popup = document.querySelector(".popup_opened")
+    closePopup(popup)
+  }
+}
+
+// Слушатели на открытие попапов.
 popupBtnEdit.addEventListener('click', function () {
   openPopup(popupProfile);
   inputName.value = titleName.textContent;
@@ -135,7 +154,7 @@ popupBtnAddCards.addEventListener('click', function () {
   openPopup(popupAddCards);
 });
 
-//Слушатель активации формы profile
+// Слушатель активации формы profile
 popupFormProfile.addEventListener("submit", (evt) => {
   evt.preventDefault();
   titleName.textContent = inputName.value;
@@ -152,5 +171,8 @@ popupFormAddCards.addEventListener("submit", (evt) => {
 
 })
 
-// Вызов функции с передачей массива
+// Вызов функции принимающая массив с готовыми картами.
 renderCards(initialCards);
+
+// Вызов функции принимающая обьект с классами содержимого popup
+enableValidation(configForm);

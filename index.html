@@ -37,14 +37,17 @@
       <div class="popup__container">
         <button class="popup__close-icon opacity-hover" type="button" aria-label="Закрытие окна"></button>
         <h2 class="popup__title">Редактировать профиль</h2>
-        <form class="popup__form popup__form_type_profile" name="popupFormEdit">
+        <form class="popup__form popup__form_type_profile" name="popupFormEdit" novalidate>
           <fieldset class="popup__fieldset">
             <input class="popup__input popup__input_type_name" type="text" id="name" name="name" placeholder="Имя"
-              minlength="3" required>
+              minlength="2" maxlength="40" required>
+            <span class="popup__input-error name-error"></span>
             <input class="popup__input popup__input_type_job" type="text" id="job" name="job" placeholder="Род занятий"
-              minlength="5" required>
+              minlength="2" maxlength="200" required>
+            <span class="popup__input-error job-error"></span>
           </fieldset>
-          <button class="popup__button-save" type="submit" aria-label="Сохранить форму">Сохранить</button>
+          <button class="popup__button popup__button_disabled" type="submit" aria-label="Сохранить форму"
+            disabled>Сохранить</button>
         </form>
       </div>
     </div>
@@ -53,14 +56,17 @@
       <div class="popup__container">
         <button class="popup__close-icon opacity-hover" type="button" aria-label="Закрытие окна"></button>
         <h2 class="popup__title">Новое место</h2>
-        <form class="popup__form popup__form_type_add-cards" name="popupFormEdit">
+        <form class="popup__form popup__form_type_add-cards" name="popupFormEdit" novalidate>
           <fieldset class="popup__fieldset">
-            <input class="popup__input popup__input_type_card-title" type="text" id="card-title" name="card-title"
-              placeholder="Название места" minlength="3" required>
-            <input class="popup__input popup__input_type_card-link" type="url" id="card-link" name="card-link"
-              placeholder="Ссылка на картинку" minlength="5" required>
+            <input class="popup__input popup__input_type_card-title" type="text" id="title" name="card-title"
+              placeholder="Название места" minlength="2" maxlength="30" required>
+            <span class="popup__input-error title-error"></span>
+            <input class="popup__input popup__input_type_card-link" type="url" id="link" name="card-link"
+              placeholder="Ссылка на картинку" required>
+            <span class="popup__input-error link-error"></span>
           </fieldset>
-          <button class="popup__button-save" type="submit" aria-label="Сохранить форму">Сохранить</button>
+          <button class="popup__button popup__button_disabled" type="submit" aria-label="Сохранить форму"
+            disabled>Сохранить</button>
         </form>
       </div>
     </div>
@@ -85,8 +91,8 @@
       </div>
     </article>
   </template>
-
-  <script src="./scripts/index.js"></script>
+  <script defer src="./scripts/validate.js"></script>
+  <script defer src="./scripts/index.js"></script>
 </body>
 
 </html>
