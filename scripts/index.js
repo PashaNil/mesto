@@ -1,30 +1,3 @@
-const initialCards = [
-  {
-    name: 'Архыз',
-    link: 'https://pictures.s3.yandex.net/frontend-developer/cards-compressed/arkhyz.jpg'
-  },
-  {
-    name: 'Челябинская область',
-    link: 'https://pictures.s3.yandex.net/frontend-developer/cards-compressed/chelyabinsk-oblast.jpg'
-  },
-  {
-    name: 'Иваново',
-    link: 'https://pictures.s3.yandex.net/frontend-developer/cards-compressed/ivanovo.jpg'
-  },
-  {
-    name: 'Камчатка',
-    link: 'https://pictures.s3.yandex.net/frontend-developer/cards-compressed/kamchatka.jpg'
-  },
-  {
-    name: 'Холмогорский район',
-    link: 'https://pictures.s3.yandex.net/frontend-developer/cards-compressed/kholmogorsky-rayon.jpg'
-  },
-  {
-    name: 'Байкал',
-    link: 'https://pictures.s3.yandex.net/frontend-developer/cards-compressed/baikal.jpg'
-  }
-];
-
 // Присваиваем и находим все кнопки крестика закрытия попапов на странице
 const closeButtons = document.querySelectorAll(".popup__close-icon")
 // Присваиваем и находим все попыпы на странице
@@ -67,15 +40,6 @@ const inputCardLink = document.querySelector(".popup__input_type_card-link");
 const templateElement = document.querySelector(".template-element").content.querySelector(".element");
 // Присваиваем и находим секцию elements
 const sectionElements = document.querySelector(".elements");
-
-const configForm = {
-  formSelector: '.popup__form',
-  inputSelector: '.popup__input',
-  submitButtonSelector: '.popup__button',
-  inactiveButtonClass: 'popup__button_disabled',
-  inputErrorClass: 'popup__input_type_error',
-  errorClass: 'popup__input-error_visible'
-};
 
 //Функция принимающая начальный массив, переберая его передает элементы {} в creatCard
 function renderCards(arrayCard) {
@@ -127,10 +91,7 @@ function closePopup(popup) {
 // В слушателях проверка: если в кликнутом обьекте есть указанный класс, то вызывается функция закрытия с переданным попапом.
 popups.forEach((popup) => {
   popup.addEventListener("mousedown", (evt) => {
-    if (evt.target.classList.contains("popup_opened")) {
-      closePopup(popup)
-    }
-    if (evt.target.classList.contains('popup__close-icon')) {
+    if (evt.target.classList.contains("popup_opened") || evt.target.classList.contains('popup__close-icon')) {
       closePopup(popup)
     }
   })
@@ -154,7 +115,7 @@ popupBtnAddCards.addEventListener('click', function () {
   openPopup(popupAddCards);
 });
 
-// Слушатель активации формы profile
+// Слушатель отправки формы profile
 popupFormProfile.addEventListener("submit", (evt) => {
   evt.preventDefault();
   titleName.textContent = inputName.value;
@@ -162,13 +123,13 @@ popupFormProfile.addEventListener("submit", (evt) => {
   closePopup(popupProfile);
 });
 
-// Слушатель активации формы addCard
+// Слушатель отправки формы addCard
 popupFormAddCards.addEventListener("submit", (evt) => {
   evt.preventDefault();
   createCard({ name: inputCardTitle.value, link: inputCardLink.value });
   closePopup(popupAddCards);
   evt.target.reset(); // Сбрасывает поля формы после отправки.
-
+  toggleButtonState([inputCardTitle, inputCardLink], evt.submitter, configForm); // Деактивирует кнопку отправки проверкой полей
 })
 
 // Вызов функции принимающая массив с готовыми картами.

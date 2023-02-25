@@ -1,3 +1,12 @@
+const configForm = {
+  formSelector: '.popup__form',
+  inputSelector: '.popup__input',
+  submitButtonSelector: '.popup__button',
+  inactiveButtonClass: 'popup__button_disabled',
+  inputErrorClass: 'popup__input_type_error',
+  errorClass: 'popup__input-error_visible'
+};
+
 // Функция при неправильной валидации.
 // Находит span по id поля и добавляет класс ошибки. Добавляет класс ошибки полю.
 function showInputError(formElement, inputElement, config) {
