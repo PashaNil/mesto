@@ -1,3 +1,8 @@
+import { Card } from "./Card.js";
+import { FormValidator } from "./FormValidator.js";
+import { initialCards } from "./initialCards.js";
+import { configForm } from "./configForm.js";
+
 // Присваиваем и находим все кнопки крестика закрытия попапов на странице
 const closeButtons = document.querySelectorAll(".popup__close-icon")
 // Присваиваем и находим все попыпы на странице
@@ -38,41 +43,26 @@ const inputCardLink = document.querySelector(".popup__input_type_card-link");
 
 // Присваиваем и находим tamplate
 const templateElement = document.querySelector(".template-element").content.querySelector(".element");
-// Присваиваем и находим секцию elements
+// Присваиваем и находим секцию elements для вставки
 const sectionElements = document.querySelector(".elements");
 
-//Функция принимающая начальный массив, переберая его передает элементы {} в creatCard
+//Функция принимающая массив карточек, переберая его передает в виде обьектов в creatCard.
 function renderCards(arrayCard) {
   arrayCard.forEach(createCard)
 }
 
-// Функция принимающая элемент и отправляющая его в getCard, затем возвращает и добавляет на страничку
+// Функция принимающая каждый обьект карточки, отправляет его в класс Card и добавляет на страницу.
 function createCard(item) {
-  const card = getCard(item)
+  const card = new Card(item, templateElement, openPopupFugure).generateCard();
   sectionElements.prepend(card);
 }
 
-//Функция принимающая элемент, далее форматирует его.
-function getCard(item) {
-  const card = templateElement.cloneNode(true);
-  const maskGroup = card.querySelector(".element__mask-group");
-  const likeButton = card.querySelector(".element__like-button");
-  card.querySelector(".element__title").textContent = item.name;
-  maskGroup.alt = item.name;
-  maskGroup.src = item.link;
-  card.querySelector(".element__trash-button").addEventListener("click", () => {
-    card.remove();
-  })
-  likeButton.addEventListener("click", () => {
-    likeButton.classList.toggle("element__like-button_active");
-  })
-  maskGroup.addEventListener("click", () => {
-    openPopup(popupFigure)
-    cardFigureImg.src = item.link;
-    cardFigureImg.alt = item.name;
-    cardFigureCaption.textContent = item.name;
-  })
-  return card
+// Функция открываяющая попап figure, принимающая с класса Card данные слушателя.
+function openPopupFugure(name, link) {
+  openPopup(popupFigure)
+  cardFigureImg.src = link;
+  cardFigureImg.alt = name;
+  cardFigureCaption.textContent = name;
 }
 
 // Функция открытия всех попапов со слушателем нажатия кнопки
@@ -105,12 +95,13 @@ function keydownEsc(evt) {
   }
 }
 
-// Слушатели на открытие попапов.
-popupBtnEdit.addEventListener('click', function () {
+// Слушатель на открытие popupProfile
+popupBtnEdit.addEventListener('click', function (evt) {
   openPopup(popupProfile);
   inputName.value = titleName.textContent;
   inputjob.value = subtitleJob.textContent;
 });
+// Слушатель на открытие popupAddCards.
 popupBtnAddCards.addEventListener('click', function () {
   openPopup(popupAddCards);
 });
@@ -129,11 +120,20 @@ popupFormAddCards.addEventListener("submit", (evt) => {
   createCard({ name: inputCardTitle.value, link: inputCardLink.value });
   closePopup(popupAddCards);
   evt.target.reset(); // Сбрасывает поля формы после отправки.
-  toggleButtonState([inputCardTitle, inputCardLink], evt.submitter, configForm); // Деактивирует кнопку отправки проверкой полей
+  const formValidator = new FormValidator(evt.target, configForm).enableValidation();
 })
+
+// Функция создающая массив всех форм, переберает и отрпавляет в class FormValidator с вызовом активации.
+function enableValidation() {
+  const formList = Array.from(document.querySelectorAll(configForm.formSelector))
+  formList.forEach((formElement) => {
+    const formValidator = new FormValidator(formElement, configForm).enableValidation();
+  })
+}
+
+// Вызов функции активации валидации.
+enableValidation();
 
 // Вызов функции принимающая массив с готовыми картами.
 renderCards(initialCards);
 
-// Вызов функции принимающая обьект с классами содержимого popup
-enableValidation(configForm);
