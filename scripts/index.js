@@ -125,14 +125,14 @@ popupFormAddCards.addEventListener("submit", (evt) => {
   createCard({ name: inputCardTitle.value, link: inputCardLink.value });
   closePopup(popupAddCards);
   evt.target.reset(); // Сбрасывает поля формы после отправки.
-  const resetValidation = new FormValidator(evt.target, configForm).resetValidation();
+  new FormValidator(evt.target, configForm).resetValidation();
 })
 
 // Функция создающая массив всех форм, переберает и отрпавляет в class FormValidator с вызовом активации.
 function enableValidation() {
   const formList = Array.from(document.querySelectorAll(configForm.formSelector))
   formList.forEach((formElement) => {
-    const formValidator = new FormValidator(formElement, configForm).enableValidation();
+  new FormValidator(formElement, configForm).enableValidation();
   })
 }
 

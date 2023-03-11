@@ -26,9 +26,7 @@ export class Card {
 
   // Вызов слушателей для элементов карточки.
   _setEventListeners() {
-    this._element.querySelector('.element__trash-button').addEventListener('click', () => {
-      this._deletingCard();
-    });
+    this._element.querySelector('.element__trash-button').addEventListener('click', this._deletingCard.bind(this));
 
     this._element.querySelector('.element__like-button').addEventListener('click', this._activationLikeButton);
 
