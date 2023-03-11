@@ -61,6 +61,13 @@ export class FormValidator {
     inputElement.classList.add(this._configForm.inputErrorClass);
   }
 
+  resetValidation() {
+    this._inputList.forEach((input) => {
+      this._hideInputError(input)
+    })
+    this._toggleButtonState()
+  }
+
   // Метод активации валидации. Теперь можно за квасом ♡.
   enableValidation() {
     this._setEventListeners();

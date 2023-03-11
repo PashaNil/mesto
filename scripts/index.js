@@ -3,8 +3,6 @@ import { FormValidator } from "./FormValidator.js";
 import { initialCards } from "./initialCards.js";
 import { configForm } from "./configForm.js";
 
-// Присваиваем и находим все кнопки крестика закрытия попапов на странице
-const closeButtons = document.querySelectorAll(".popup__close-icon")
 // Присваиваем и находим все попыпы на странице
 const popups = document.querySelectorAll(".popup");
 
@@ -44,17 +42,22 @@ const inputCardLink = document.querySelector(".popup__input_type_card-link");
 // Присваиваем и находим tamplate
 const templateElement = document.querySelector(".template-element").content.querySelector(".element");
 // Присваиваем и находим секцию elements для вставки
-const sectionElements = document.querySelector(".elements");
+const cardsContainer = document.querySelector(".elements");
 
 //Функция принимающая массив карточек, переберая его передает в виде обьектов в creatCard.
 function renderCards(arrayCard) {
   arrayCard.forEach(createCard)
 }
 
-// Функция принимающая каждый обьект карточки, отправляет его в класс Card и добавляет на страницу.
-function createCard(item) {
-  const card = new Card(item, templateElement, openPopupFugure).generateCard();
-  sectionElements.prepend(card);
+// Функция принимающая каждый обьект карточки, отправляет его в класс Card и передавая на добавление.
+function createCard(cardData) {
+  const card = new Card(cardData, templateElement, openPopupFugure).generateCard();
+  prependCard(card);
+}
+
+// Функция добавляющая карточки на страницу.
+function prependCard(card) {
+  cardsContainer.prepend(card);
 }
 
 // Функция открываяющая попап figure, принимающая с класса Card данные слушателя.
@@ -78,14 +81,16 @@ function closePopup(popup) {
 }
 
 // Перебор псевдомассива с попапами страницы, добавляющая в них слушатель
-// В слушателях проверка: если в кликнутом обьекте есть указанный класс, то вызывается функция закрытия с переданным попапом.
 popups.forEach((popup) => {
-  popup.addEventListener("mousedown", (evt) => {
-    if (evt.target.classList.contains("popup_opened") || evt.target.classList.contains('popup__close-icon')) {
-      closePopup(popup)
-    }
-  })
+  popup.addEventListener("mousedown", mousedownClosePopup);
 })
+
+// Функция вызывающая закрытие попапа при клике по крестику или оверлею.
+function mousedownClosePopup(evt) {
+  if (evt.target.classList.contains("popup_opened") || evt.target.classList.contains('popup__close-icon')) {
+    closePopup(evt.currentTarget);
+  }
+}
 
 // Функция закрытие попапа по нажатию esc
 function keydownEsc(evt) {
@@ -120,7 +125,7 @@ popupFormAddCards.addEventListener("submit", (evt) => {
   createCard({ name: inputCardTitle.value, link: inputCardLink.value });
   closePopup(popupAddCards);
   evt.target.reset(); // Сбрасывает поля формы после отправки.
-  const formValidator = new FormValidator(evt.target, configForm).enableValidation();
+  const resetValidation = new FormValidator(evt.target, configForm).resetValidation();
 })
 
 // Функция создающая массив всех форм, переберает и отрпавляет в class FormValidator с вызовом активации.

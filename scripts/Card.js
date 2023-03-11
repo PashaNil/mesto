@@ -3,7 +3,7 @@ export class Card {
     this._name = data.name;
     this._link = data.link;
     this._templateElement = templateElement;
-    this.openPopupFugure = openPopupFugure;
+    this._openPopupFugure = openPopupFugure;
   }
 
   // Создет клон template и возвращает его.
@@ -27,16 +27,24 @@ export class Card {
   // Вызов слушателей для элементов карточки.
   _setEventListeners() {
     this._element.querySelector('.element__trash-button').addEventListener('click', () => {
-      this._element.remove();
+      this._deletingCard();
     });
 
-    this._element.querySelector('.element__like-button').addEventListener('click', (evt) => {
-      evt.target.classList.toggle("element__like-button_active")
-    });
+    this._element.querySelector('.element__like-button').addEventListener('click', this._activationLikeButton);
 
     // Слушатель на нажатие по картинке, отправляет данные внешней функции активации popupfigure.
     this._elementMask.addEventListener('click', () => {
-      this.openPopupFugure(this._name, this._link);
+      this._openPopupFugure(this._name, this._link);
     })
   }
+
+  _deletingCard(){
+    this._element.remove();
+    this._element = null;
+  };
+
+  _activationLikeButton(evt){
+    evt.target.classList.toggle("element__like-button_active")
+  }
+
 };
