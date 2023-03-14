@@ -117,6 +117,7 @@ popupFormProfile.addEventListener("submit", (evt) => {
   titleName.textContent = inputName.value;
   subtitleJob.textContent = inputjob.value;
   closePopup(popupProfile);
+  formValidator["popupFormProfile"].resetValidation();
 });
 
 // Слушатель отправки формы addCard
@@ -125,16 +126,23 @@ popupFormAddCards.addEventListener("submit", (evt) => {
   createCard({ name: inputCardTitle.value, link: inputCardLink.value });
   closePopup(popupAddCards);
   evt.target.reset(); // Сбрасывает поля формы после отправки.
-  new FormValidator(evt.target, configForm).resetValidation();
+  formValidator["popupFormCards"].resetValidation();
 })
+
+const formValidator = {};
 
 // Функция создающая массив всех форм, переберает и отрпавляет в class FormValidator с вызовом активации.
 function enableValidation() {
   const formList = Array.from(document.querySelectorAll(configForm.formSelector))
   formList.forEach((formElement) => {
-  new FormValidator(formElement, configForm).enableValidation();
+  const validator = new FormValidator(formElement, configForm);
+  validator.enableValidation();
+
+  const formName = formElement.getAttribute("name");
+  formValidator[formName] = validator;
   })
 }
+
 
 // Вызов функции активации валидации.
 enableValidation();

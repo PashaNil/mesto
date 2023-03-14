@@ -4,6 +4,8 @@ export class Card {
     this._link = data.link;
     this._templateElement = templateElement;
     this._openPopupFugure = openPopupFugure;
+    this._removeCard = this._removeCard.bind(this);
+    this._toggleLike = this._toggleLike.bind(this);
   }
 
   // Создет клон template и возвращает его.
@@ -18,17 +20,17 @@ export class Card {
     this._elementMask = this._element.querySelector('.element__mask-group');
     this._elementMask.src = this._link;
     this._elementMask.alt = this._name;
-
     this._element.querySelector('.element__title').textContent = this._name;
+    this._buttonLike = this._element.querySelector('.element__like-button');
+    this._buttonTrash = this._element.querySelector('.element__trash-button');
     this._setEventListeners();
     return this._element;
   }
 
   // Вызов слушателей для элементов карточки.
   _setEventListeners() {
-    this._element.querySelector('.element__trash-button').addEventListener('click', this._deletingCard.bind(this));
-
-    this._element.querySelector('.element__like-button').addEventListener('click', this._activationLikeButton);
+    this._buttonTrash.addEventListener('click', this._removeCard);
+    this._buttonLike.addEventListener('click', this._toggleLike);
 
     // Слушатель на нажатие по картинке, отправляет данные внешней функции активации popupfigure.
     this._elementMask.addEventListener('click', () => {
@@ -36,13 +38,13 @@ export class Card {
     })
   }
 
-  _deletingCard(){
+  _removeCard(){
     this._element.remove();
     this._element = null;
   };
 
-  _activationLikeButton(evt){
-    evt.target.classList.toggle("element__like-button_active")
+  _toggleLike(){
+    this._buttonLike.classList.toggle("element__like-button_active");
   }
 
 };
