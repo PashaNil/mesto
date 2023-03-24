@@ -1,9 +1,9 @@
 export class Card {
-  constructor(data, templateElement, openPopupFugure) {
-    this._name = data.name;
+  constructor(data, templateElement, handleCardClick) {
+    this._title = data.title;
     this._link = data.link;
     this._templateElement = templateElement;
-    this._openPopupFugure = openPopupFugure;
+    this._handleCardClick = handleCardClick;
     this._removeCard = this._removeCard.bind(this);
     this._toggleLike = this._toggleLike.bind(this);
   }
@@ -19,8 +19,8 @@ export class Card {
     this._element = this._getTemplate();
     this._elementMask = this._element.querySelector('.element__mask-group');
     this._elementMask.src = this._link;
-    this._elementMask.alt = this._name;
-    this._element.querySelector('.element__title').textContent = this._name;
+    this._elementMask.alt = this._title;
+    this._element.querySelector('.element__title').textContent = this._title;
     this._buttonLike = this._element.querySelector('.element__like-button');
     this._buttonTrash = this._element.querySelector('.element__trash-button');
     this._setEventListeners();
@@ -34,7 +34,7 @@ export class Card {
 
     // Слушатель на нажатие по картинке, отправляет данные внешней функции активации popupfigure.
     this._elementMask.addEventListener('click', () => {
-      this._openPopupFugure(this._name, this._link);
+      this._handleCardClick(this._title, this._link);
     })
   }
 
