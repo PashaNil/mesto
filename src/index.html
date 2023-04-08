@@ -16,6 +16,9 @@
       <section class="profile">
         <div class="profile__container">
           <img class="profile__avatar" src="<%=require('./images/Avatar.png')%>" alt="Аватар профиля">
+          <button class="profile__avatar-edit" type="button">
+            <img class="profile__avatar-pen" src="<%=require('./images/Avatar-pens.svg')%>" alt="ручка редактирования">
+          </button>
           <div class="profile__info">
             <h1 class="profile__title">Жак-Ив Кусто</h1>
             <button class="profile__edit-button opacity-hover" type="button"
@@ -76,6 +79,22 @@
         <img class="popup__figure-img" src="#" alt="">
         <figcaption class="popup__figurecaption"></figcaption>
       </figure>
+    </div>
+
+    <div class="popup popup_type_avatar-edit">
+      <div class="popup__container">
+        <button class="popup__close-icon opacity-hover" type="button" aria-label="Закрытие окна"></button>
+          <h2 class="popup__title">Обновить аватар</h2>
+          <form class="popup__form popup__form_type_avatar" name="popupFormAvatar" novalidate>
+            <fieldset class="popup__fieldset">
+              <input class="popup__input popup__input_type_avatar" type="url" name="avatar"
+              placeholder="Ссылка на изображение" required>
+              <span class="popup__input-error link-error"></span>
+            </fieldset>
+            <button class="popup__button popup__button_disabled" type="submit" aria-label="Сохранить форму"
+            disabled>Сохранить</button>
+          </form>
+      </div>
     </div>
 
   </div>

@@ -61,7 +61,6 @@ constants.popupBtnEdit.addEventListener('click', () => {
   formValidator["popupFormProfile"].resetValidation();
 })
 
-
 const formValidator = {};
 
 // Функция создающая массив всех форм, переберает и отрпавляет в class FormValidator с вызовом активации.
