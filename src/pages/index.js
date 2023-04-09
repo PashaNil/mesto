@@ -11,6 +11,9 @@ import UserInfo from "../components/UserInfo.js";
 import { initialCards } from "../utils/initialCards.js";
 import { configForm } from "../utils/configForm.js";
 
+import { Api } from "../components/api.js";
+import { apiConfig } from "../utils/apiConfig.js";
+
 // Функция принимающая каждый обьект карточки, генерирует возврщает изменения.
 function createCard(cardData) {
   const card = new Card(cardData, constants.templateElement, handleCardClick).generateCard();
@@ -18,12 +21,25 @@ function createCard(cardData) {
 }
 
 // Вызов класса Section, принимабщая обьект с массивом готовых и отправленых карточек.
-const cardList = new Section({
+/* const cardList = new Section({
   items: initialCards, renderer: (item) => {
     cardList.addItem(createCard(item));
   }
 }, ".elements");
-cardList.renderItems();
+cardList.renderItems(); */
+
+// Логика добавления карточек с сервера
+const apiNew = new Api(apiConfig);
+let blabla = null;
+apiNew.getCards().then((data)=>{blabla = data})
+console.log(blabla)
+
+/* const cardListApi = new Section({
+  items: apiNew.getCards().then(data), renderer: (item) => {
+    cardListApi.addItem(createCard(item));
+  }
+}, ".elements");
+cardListApi.renderItems(); */
 
 // Функция открываяющая попап figure, принимающая с класса Card данные слушателя.
 const popupWithImage = new PopupWithImage(".popup_type_card-image");
