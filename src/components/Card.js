@@ -1,6 +1,6 @@
 export class Card {
-  constructor(data, templateElement, handleCardClick, popupConfirmation) {
-    this._popupConfirmation = popupConfirmation;
+  constructor(data, templateElement, handleCardClick, api) {
+    this._api = api;
     this._title = data.name;
     this._link = data.link;
     this._likesNumber = data.likes
@@ -44,12 +44,12 @@ export class Card {
   }
 
   _removeCard(){
-    console.log(this._popupConfirmation)
     this._element.remove();
     this._element = null;
   };
 
   _toggleLike(){
+    debugger
     this._buttonLike.classList.toggle("element__like-button_active");
   }
 

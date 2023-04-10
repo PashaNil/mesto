@@ -1,46 +1,63 @@
 export class Api {
-  constructor(configApi){
+  constructor(configApi) {
     this._url = configApi.url
     this._headers = configApi.headers
   }
 
-  // Получение карточек от сервера
-  getInitialCards(){
-    const url = this._url + "/cards"
-    return fetch(url, {headers: this._headers})
-    .then((res)=>{
-      return res.json()
+  _request(url, data = {}) {
+    return fetch(url, {
+      ...data,
+      headers: this._headers
     })
+      .then((res) => {
+        return res.json()
+      })
+  }
+
+  // Получение карточек от сервера
+  getInitialCards() {
+    const url = this._url + "/cards"
+    return this._request(url)
+  }
+
+  // Получение информации о себе
+  initialMe() {
+    const url = this._url + "/users/me";
+    return this._request(url)
   }
 
   // Создание новой карточки
-  addNewCard(cardData){
+  addNewCard(cardData) {
     const url = this._url + "/cards";
-     fetch(url, {
+    return this._request(url, {
       method: "POST",
-      headers: this._headers,
       body: JSON.stringify(cardData)
     })
   }
 
   // Обновление данных профиля на сервере
-  updateProfile(profileData){
+  updateProfile(profileData) {
     const url = this._url + "/users/me"
-    fetch(url, {
+    return this._request(url, {
       method: "PATCH",
-      headers: this._headers,
       body: JSON.stringify(profileData)
     })
   }
 
   // (еще не реализовано)
   // Обновление данных лайка на сервере
-  getLikeNumber(likesData){
-    const url = this._url + "/cards"
-    fetch(url, {
-      method: "PATCH",
-      headers: this._headers,
-      body: JSON.stringify(likesData)
+  getLikeNumber(cardId) {
+    const url = this._url + `/cards/${cardId}/likes`
+    return this._request(url, {
+      method: "PUT"
+    })
+  }
+
+  // Удаление лайка
+  deletLikeNumber(cardId) {
+    const url = this._url + `/cards/${cardId}/likes`
+    return this._request(url, {
+      method: "DELETE"
     })
   }
 

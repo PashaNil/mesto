@@ -11,7 +11,7 @@ import UserInfo from "../components/UserInfo.js";
 import PopupConfirmation from "../components/PopupConfirmation.js";
 import { configForm } from "../utils/configForm.js";
 
-import {Api}  from "../components/Api.js";
+import { Api } from "../components/Api.js";
 import { apiConfig } from "../utils/apiConfig.js";
 
 // Класс Api
@@ -27,13 +27,13 @@ const cardList = new Section(
 
 // Выгрузка всех карточек с сервера
 apiNew.getInitialCards()
-.then((data)=>{
-  cardList.renderItems(data)
-})
+  .then((data) => {
+    cardList.renderItems(data)
+  })
 
 // Функция принимающая каждый обьект карточки, генерирует возврщает изменения.
 function createCard(cardData) {
-  return new Card(cardData, constants.templateElement, handleCardClick).generateCard();
+  return new Card(cardData, constants.templateElement, handleCardClick, apiNew).generateCard();
 }
 
 // Функция открываяющая попап figure, принимающая с класса Card данные слушателя.
@@ -46,8 +46,10 @@ popupWithImage.setEventListeners();
 
 // Работа с формой addCard и отправка карточек на страницу.
 const cardWithForm = new PopupWithForm(".popup_type_add-cards", (itemsCard) => {
-  cardList.addItem(createCard(itemsCard));
   apiNew.addNewCard(itemsCard)
+    .then((data) => {
+      cardList.addItem(createCard(data));
+    })
 });
 cardWithForm.setEventListeners();
 
