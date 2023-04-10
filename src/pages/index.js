@@ -8,38 +8,33 @@ import Section from "../components/Section.js";
 import PopupWithImage from "../components/PopupWithImage.js";
 import PopupWithForm from "../components/PopupWithForm.js";
 import UserInfo from "../components/UserInfo.js";
-import { initialCards } from "../utils/initialCards.js";
+import PopupConfirmation from "../components/PopupConfirmation.js";
 import { configForm } from "../utils/configForm.js";
 
-import { Api } from "../components/api.js";
+import {Api}  from "../components/Api.js";
 import { apiConfig } from "../utils/apiConfig.js";
+
+// Класс Api
+const apiNew = new Api(apiConfig);
+
+const cardList = new Section(
+  {
+    items: null,
+    renderer: createCard
+  },
+  ".elements"
+)
+
+// Выгрузка всех карточек с сервера
+apiNew.getInitialCards()
+.then((data)=>{
+  cardList.renderItems(data)
+})
 
 // Функция принимающая каждый обьект карточки, генерирует возврщает изменения.
 function createCard(cardData) {
-  const card = new Card(cardData, constants.templateElement, handleCardClick).generateCard();
-  return card;
+  return new Card(cardData, constants.templateElement, handleCardClick).generateCard();
 }
-
-// Вызов класса Section, принимабщая обьект с массивом готовых и отправленых карточек.
-/* const cardList = new Section({
-  items: initialCards, renderer: (item) => {
-    cardList.addItem(createCard(item));
-  }
-}, ".elements");
-cardList.renderItems(); */
-
-// Логика добавления карточек с сервера
-const apiNew = new Api(apiConfig);
-let blabla = null;
-apiNew.getCards().then((data)=>{blabla = data})
-console.log(blabla)
-
-/* const cardListApi = new Section({
-  items: apiNew.getCards().then(data), renderer: (item) => {
-    cardListApi.addItem(createCard(item));
-  }
-}, ".elements");
-cardListApi.renderItems(); */
 
 // Функция открываяющая попап figure, принимающая с класса Card данные слушателя.
 const popupWithImage = new PopupWithImage(".popup_type_card-image");
@@ -52,9 +47,11 @@ popupWithImage.setEventListeners();
 // Работа с формой addCard и отправка карточек на страницу.
 const cardWithForm = new PopupWithForm(".popup_type_add-cards", (itemsCard) => {
   cardList.addItem(createCard(itemsCard));
+  apiNew.addNewCard(itemsCard)
 });
 cardWithForm.setEventListeners();
 
+// Открытие попапа Card
 constants.popupBtnAddCards.addEventListener('click', () => {
   cardWithForm.openPopup();
   formValidator["popupFormCards"].resetValidation();
@@ -65,6 +62,7 @@ const newUserInfo = new UserInfo({ nameTitleSelector: ".profile__title", jobSubT
 
 const infoWithForm = new PopupWithForm(".popup_type_profile", (itemsInfo) => {
   newUserInfo.setUserInfo(itemsInfo);
+  apiNew.updateProfile(itemsInfo)
 })
 
 infoWithForm.setEventListeners();

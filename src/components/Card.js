@@ -1,7 +1,9 @@
 export class Card {
-  constructor(data, templateElement, handleCardClick) {
+  constructor(data, templateElement, handleCardClick, popupConfirmation) {
+    this._popupConfirmation = popupConfirmation;
     this._title = data.name;
     this._link = data.link;
+    this._likesNumber = data.likes
     this._templateElement = templateElement;
     this._handleCardClick = handleCardClick;
     this._removeCard = this._removeCard.bind(this);
@@ -23,6 +25,9 @@ export class Card {
     this._element.querySelector('.element__title').textContent = this._title;
     this._buttonLike = this._element.querySelector('.element__like-button');
     this._buttonTrash = this._element.querySelector('.element__trash-button');
+    this._elementLikeNumber = this._element.querySelector('.element__like-number');
+    this._elementLikeNumber.textContent = this._likesNumber.length;
+
     this._setEventListeners();
     return this._element;
   }
@@ -39,6 +44,7 @@ export class Card {
   }
 
   _removeCard(){
+    console.log(this._popupConfirmation)
     this._element.remove();
     this._element = null;
   };

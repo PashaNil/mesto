@@ -44,7 +44,7 @@
             <input class="popup__input popup__input_type_name" type="text" id="name" name="name" placeholder="Имя"
               minlength="2" maxlength="40" required>
             <span class="popup__input-error name-error"></span>
-            <input class="popup__input popup__input_type_job" type="text" id="job" name="job" placeholder="Род занятий"
+            <input class="popup__input popup__input_type_job" type="text" id="job" name="about" placeholder="Род занятий"
               minlength="2" maxlength="200" required>
             <span class="popup__input-error job-error"></span>
           </fieldset>
@@ -60,7 +60,7 @@
         <h2 class="popup__title">Новое место</h2>
         <form class="popup__form popup__form_type_add-cards" name="popupFormCards" novalidate>
           <fieldset class="popup__fieldset">
-            <input class="popup__input popup__input_type_card-title" type="text" id="title" name="title"
+            <input class="popup__input popup__input_type_card-title" type="text" id="title" name="name"
               placeholder="Название места" minlength="2" maxlength="30" required>
             <span class="popup__input-error title-error"></span>
             <input class="popup__input popup__input_type_card-link" type="url" id="link" name="link"
@@ -79,6 +79,16 @@
         <img class="popup__figure-img" src="#" alt="">
         <figcaption class="popup__figurecaption"></figcaption>
       </figure>
+    </div>
+
+    <div class="popup popup-confirmation">
+      <div class="popup__container">
+        <button class="popup__close-icon opacity-hover" type="button" aria-label="Закрытие окна"></button>
+        <h2 class="popup__title">Вы уверены?</h2>
+        <form class="popup__form">
+          <button class="popup__button">Да</button>
+        </form>
+      </div>
     </div>
 
     <div class="popup popup_type_avatar-edit">
@@ -105,7 +115,10 @@
       <button class="element__trash-button" type="button"></button>
       <div class="element__rectangle">
         <h2 class="element__title"></h2>
+        <div class="element__container-like">
         <button class="element__like-button" type="button"></button>
+        <p class="element__like-number"></p>
+        </div>
       </div>
     </article>
   </template>
