@@ -14,6 +14,19 @@ import { configForm } from "../utils/configForm.js";
 import { Api } from "../components/Api.js";
 import { apiConfig } from "../utils/apiConfig.js";
 
+// Попап Сonfirmation
+const popupConfirmation = new PopupConfirmation(".popup_type_confirmation");
+
+function confirmationDeletCard (){
+  popupConfirmation.openPopup();
+  if(popupConfirmation.setEventSumbit){
+    console.log(true)
+  }
+}
+popupConfirmation.setEventListeners()
+confirmationDeletCard()
+
+
 // Класс Api
 const apiNew = new Api(apiConfig);
 
@@ -42,7 +55,7 @@ Promise.all([apiNew.getInitialCards(), apiNew.getSelfData()])
 
 // Функция принимающая каждый обьект карточки, генерирует возврщает изменения.
 function createCard(cardData) {
-  return new Card(cardData, constants.templateElement, handleCardClick, apiNew, newUserInfo).generateCard();
+  return new Card(cardData, constants.templateElement, handleCardClick, apiNew, newUserInfo, confirmationDeletCard).generateCard();
 }
 
 // Функция открываяющая попап figure, принимающая с класса Card данные слушателя.

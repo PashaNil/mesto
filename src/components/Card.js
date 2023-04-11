@@ -1,5 +1,5 @@
 export class Card {
-  constructor(data, templateElement, handleCardClick, api, userInfo) {
+  constructor(data, templateElement, handleCardClick, api, userInfo, confirmationDeletCard) {
     // data - likes[кто лайкнул], link, name, owner{инф о создателе}, id
     // api - Доступ к api.js
     // userInfo - конструктор userInfo, с сохраненной информацией обо мне.
@@ -12,6 +12,7 @@ export class Card {
     this._likesCardArr = data.likes // Массивы лайков карточек [{пользователь 1},{пользователь 2}]
     this._templateElement = templateElement;
     this._handleCardClick = handleCardClick;
+    this._confirmationDeletCard = confirmationDeletCard;
     this._removeCard = this._removeCard.bind(this);
     this._toggleLike = this._toggleLike.bind(this);
   }

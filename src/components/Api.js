@@ -11,8 +11,8 @@ export class Api {
       headers: this._headers
     })
       .then((res) => {
-        console.log(`Код: ${res.status} ${res.statusText}`)
-        return res.json()
+          console.log(`Код: ${res.status} Запрос выполнен`)
+          return res.json()
       })
       .catch((data)=>{
         console.log(`Произошла ошибка. Код: ${data.status} ${data.statusText}`)
