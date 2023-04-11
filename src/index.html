@@ -15,15 +15,17 @@
     <main class="content">
       <section class="profile">
         <div class="profile__container">
+          <div class="profile__avatar-container">
           <img class="profile__avatar" src="<%=require('./images/Avatar.png')%>" alt="Аватар профиля">
           <button class="profile__avatar-edit" type="button">
             <img class="profile__avatar-pen" src="<%=require('./images/Avatar-pens.svg')%>" alt="ручка редактирования">
           </button>
+        </div>
           <div class="profile__info">
-            <h1 class="profile__title">Жак-Ив Кусто</h1>
+            <h1 class="profile__title"></h1>
             <button class="profile__edit-button opacity-hover" type="button"
               aria-label="Редактирование информации"></button>
-            <p class="profile__subtitle">Исследователь океана</p>
+            <p class="profile__subtitle"></p>
           </div>
         </div>
         <button class="profile__add-button opacity-hover" type="button" aria-label="Добавить карточку"></button>
@@ -81,7 +83,7 @@
       </figure>
     </div>
 
-    <div class="popup popup-confirmation">
+    <div class="popup popup_type_confirmation">
       <div class="popup__container">
         <button class="popup__close-icon opacity-hover" type="button" aria-label="Закрытие окна"></button>
         <h2 class="popup__title">Вы уверены?</h2>
@@ -97,9 +99,9 @@
           <h2 class="popup__title">Обновить аватар</h2>
           <form class="popup__form popup__form_type_avatar" name="popupFormAvatar" novalidate>
             <fieldset class="popup__fieldset">
-              <input class="popup__input popup__input_type_avatar" type="url" name="avatar"
+              <input class="popup__input popup__input_type_avatar" type="url" id="avatar" name="avatar"
               placeholder="Ссылка на изображение" required>
-              <span class="popup__input-error link-error"></span>
+              <span class="popup__input-error avatar-error"></span>
             </fieldset>
             <button class="popup__button popup__button_disabled" type="submit" aria-label="Сохранить форму"
             disabled>Сохранить</button>

@@ -15,9 +15,3 @@
 .profile__avatar-edit:hover {
   opacity: 1;
 }
-
-@media screen and (max-width:720px) {
-  .profile__avatar-edit {
-    left: 62px;
-  }
-}

@@ -4,6 +4,7 @@ export class Api {
     this._headers = configApi.headers
   }
 
+  //Шаблон запроса к серверу с ответом
   _request(url, data = {}) {
     return fetch(url, {
       ...data,
@@ -21,7 +22,7 @@ export class Api {
   }
 
   // Получение информации о себе
-  initialMe() {
+  getSelfData() {
     const url = this._url + "/users/me";
     return this._request(url)
   }
@@ -44,9 +45,17 @@ export class Api {
     })
   }
 
-  // (еще не реализовано)
+  //Обновление аватара
+  updateAvatar(avatarData){
+    const url = this._url + "/users/me/avatar";
+    return this._request(url, {
+      method: "PATCH",
+      body: JSON.stringify(avatarData)
+    })
+  }
+
   // Обновление данных лайка на сервере
-  getLikeNumber(cardId) {
+  addLikeNumber(cardId) {
     const url = this._url + `/cards/${cardId}/likes`
     return this._request(url, {
       method: "PUT"

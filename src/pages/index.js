@@ -17,6 +17,14 @@ import { apiConfig } from "../utils/apiConfig.js";
 // Класс Api
 const apiNew = new Api(apiConfig);
 
+// Данные пользователя
+const newUserInfo = new UserInfo({
+  nameTitleSelector: ".profile__title",
+  jobSubTitleSelector: ".profile__subtitle",
+  avatarImgSelector: ".profile__avatar"
+}
+);
+
 const cardList = new Section(
   {
     items: null,
@@ -25,15 +33,16 @@ const cardList = new Section(
   ".elements"
 )
 
-// Выгрузка всех карточек с сервера
-apiNew.getInitialCards()
-  .then((data) => {
-    cardList.renderItems(data)
+// Выгрузка всех карточек с сервера и выгрузка данных профиля
+Promise.all([apiNew.getInitialCards(), apiNew.getSelfData()])
+  .then(([cards, selfData]) => {
+    newUserInfo.setUserInfo(selfData)
+    cardList.renderItems(cards)
   })
 
 // Функция принимающая каждый обьект карточки, генерирует возврщает изменения.
 function createCard(cardData) {
-  return new Card(cardData, constants.templateElement, handleCardClick, apiNew).generateCard();
+  return new Card(cardData, constants.templateElement, handleCardClick, apiNew, newUserInfo).generateCard();
 }
 
 // Функция открываяющая попап figure, принимающая с класса Card данные слушателя.
@@ -59,12 +68,14 @@ constants.popupBtnAddCards.addEventListener('click', () => {
   formValidator["popupFormCards"].resetValidation();
 })
 
-//Работа с формой profile
-const newUserInfo = new UserInfo({ nameTitleSelector: ".profile__title", jobSubTitleSelector: ".profile__subtitle" });
-
+// Передаю попап, нахожу там инпуты, при сабмите выполняется отправка на сервер и обновление профайла
 const infoWithForm = new PopupWithForm(".popup_type_profile", (itemsInfo) => {
-  newUserInfo.setUserInfo(itemsInfo);
   apiNew.updateProfile(itemsInfo)
+  .then((data)=>{
+    // Применяем изменения на странице
+    //в ней {name, about, avatar, _id, cohort}
+    newUserInfo.setUserInfo(data);
+  })
 })
 
 infoWithForm.setEventListeners();
@@ -77,6 +88,22 @@ constants.popupBtnEdit.addEventListener('click', () => {
   formValidator["popupFormProfile"].resetValidation();
 })
 
+// Обновление аватара
+const avatarWithForm = new PopupWithForm(".popup_type_avatar-edit", (itemsAvatar)=>{
+  apiNew.updateAvatar(itemsAvatar)
+  .then((data)=>{
+    newUserInfo.setUserInfo(data);
+  })
+})
+
+avatarWithForm.setEventListeners();
+
+constants.popupBtnAvatar.addEventListener('click', () => {
+  formValidator["popupFormAvatar"].resetValidation();
+  avatarWithForm.openPopup();
+})
+
+// Валидация
 const formValidator = {};
 
 // Функция создающая массив всех форм, переберает и отрпавляет в class FormValidator с вызовом активации.

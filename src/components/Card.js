@@ -1,9 +1,15 @@
 export class Card {
-  constructor(data, templateElement, handleCardClick, api) {
+  constructor(data, templateElement, handleCardClick, api, userInfo) {
+    // data - likes[кто лайкнул], link, name, owner{инф о создателе}, id
+    // api - Доступ к api.js
+    // userInfo - конструктор userInfo, с сохраненной информацией обо мне.
+    this._userInfo = userInfo;
     this._api = api;
-    this._title = data.name;
-    this._link = data.link;
-    this._likesNumber = data.likes
+    this._idСards = data._id // id карточек
+    this._idUsers = data.owner._id; // id пользователей
+    this._title = data.name; // имя карты
+    this._link = data.link; // url карты
+    this._likesCardArr = data.likes // Массивы лайков карточек [{пользователь 1},{пользователь 2}]
     this._templateElement = templateElement;
     this._handleCardClick = handleCardClick;
     this._removeCard = this._removeCard.bind(this);
@@ -24,9 +30,9 @@ export class Card {
     this._elementMask.alt = this._title;
     this._element.querySelector('.element__title').textContent = this._title;
     this._buttonLike = this._element.querySelector('.element__like-button');
-    this._buttonTrash = this._element.querySelector('.element__trash-button');
     this._elementLikeNumber = this._element.querySelector('.element__like-number');
-    this._elementLikeNumber.textContent = this._likesNumber.length;
+    this._initTrash();
+    this._initLikes()
 
     this._setEventListeners();
     return this._element;
@@ -48,9 +54,41 @@ export class Card {
     this._element = null;
   };
 
-  _toggleLike(){
-    debugger
-    this._buttonLike.classList.toggle("element__like-button_active");
+  // Отображение корзины в карточке
+  _initTrash(){
+    this._buttonTrash = this._element.querySelector('.element__trash-button');
+    if (this._idUsers === this._userInfo._info._id){
+      return this._buttonTrash
+    } else {
+     return this._buttonTrash.classList.add('element__trash-button_hiding');
+    }
   }
 
+  _toggleLike(){
+    let promise
+    if (this.isLiked()) {
+      promise = this._api.deletLikeNumber(this._idСards)
+    } else {
+      promise = this._api.addLikeNumber(this._idСards)
+    }
+
+    promise.then((data) => {
+        this._elementLikeNumber.textContent = data.likes.length;
+        this._likesCardArr = data.likes
+        this._buttonLike.classList.toggle("element__like-button_active");
+      })
+  }
+
+  _initLikes() {
+    if (this.isLiked()) {
+      this._buttonLike.classList.toggle("element__like-button_active");
+    }
+    this._elementLikeNumber.textContent = this._likesCardArr.length;
+  }
+
+  isLiked() {
+    return this._likesCardArr.find((likeInfo) => {
+      return likeInfo._id === this._userInfo._info._id
+    })
+  }
 };

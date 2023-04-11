@@ -8,5 +8,8 @@ export const inputjob = document.querySelector(".popup__input_type_job");
 // Присваиваем и находим кнопку добавления карточек
 export const popupBtnAddCards = document.querySelector('.profile__add-button');
 
+// Присваиваем и находим кнопку редактирования аватара
+export const popupBtnAvatar = document.querySelector('.profile__avatar-edit')
+
 // Присваиваем и находим tamplate
 export const templateElement = document.querySelector(".template-element").content.querySelector(".element");
