@@ -11,7 +11,11 @@ export class Api {
       headers: this._headers
     })
       .then((res) => {
+        console.log(`Код: ${res.status} ${res.statusText}`)
         return res.json()
+      })
+      .catch((data)=>{
+        console.log(`Произошла ошибка. Код: ${data.status} ${data.statusText}`)
       })
   }
 
@@ -70,4 +74,11 @@ export class Api {
     })
   }
 
+  // Удаление карточки
+  deletCard(cardId){
+    const url = this._url + `/cards/${cardId}`
+    return this._request(url, {
+      method: "DELETE"
+    })
+  }
 }

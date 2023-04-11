@@ -33,7 +33,6 @@ export class Card {
     this._elementLikeNumber = this._element.querySelector('.element__like-number');
     this._initTrash();
     this._initLikes()
-
     this._setEventListeners();
     return this._element;
   }
@@ -49,22 +48,26 @@ export class Card {
     })
   }
 
-  _removeCard(){
-    this._element.remove();
-    this._element = null;
+  _removeCard() {
+    this._api.deletCard(this._idСards)
+      .then((data) => {
+        this._element.remove();
+        this._element = null;
+        console.log(data.message)
+      })
   };
 
   // Отображение корзины в карточке
-  _initTrash(){
+  _initTrash() {
     this._buttonTrash = this._element.querySelector('.element__trash-button');
-    if (this._idUsers === this._userInfo._info._id){
+    if (this._idUsers === this._userInfo._info._id) {
       return this._buttonTrash
     } else {
-     return this._buttonTrash.classList.add('element__trash-button_hiding');
+      return this._buttonTrash.classList.add('element__trash-button_hiding');
     }
   }
 
-  _toggleLike(){
+  _toggleLike() {
     let promise
     if (this.isLiked()) {
       promise = this._api.deletLikeNumber(this._idСards)
@@ -73,10 +76,10 @@ export class Card {
     }
 
     promise.then((data) => {
-        this._elementLikeNumber.textContent = data.likes.length;
-        this._likesCardArr = data.likes
-        this._buttonLike.classList.toggle("element__like-button_active");
-      })
+      this._elementLikeNumber.textContent = data.likes.length;
+      this._likesCardArr = data.likes
+      this._buttonLike.classList.toggle("element__like-button_active");
+    })
   }
 
   _initLikes() {
