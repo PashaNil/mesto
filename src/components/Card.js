@@ -50,12 +50,17 @@ export class Card {
   }
 
   _removeCard() {
-    this._api.deletCard(this._idСards)
-      .then((data) => {
-        this._element.remove();
-        this._element = null;
-        console.log(data.message)
-      })
+    this._confirmationDeletCard()
+    .then((confirmation)=>{
+      if(confirmation){
+        this._api.deletCard(this._idСards)
+        .then((data) => {
+          this._element.remove();
+          this._element = null;
+          console.log(data.message)
+        })
+      }
+    })
   };
 
   // Отображение корзины в карточке

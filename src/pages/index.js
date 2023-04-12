@@ -15,17 +15,14 @@ import { Api } from "../components/Api.js";
 import { apiConfig } from "../utils/apiConfig.js";
 
 // Попап Сonfirmation
-const popupConfirmation = new PopupConfirmation(".popup_type_confirmation");
-
 function confirmationDeletCard (){
-  popupConfirmation.openPopup();
-  if(popupConfirmation.setEventSumbit){
-    console.log(true)
-  }
+  return new Promise((resolve,reject) =>{
+    const popupConfirmation = new PopupConfirmation(".popup_type_confirmation");
+    popupConfirmation.setEventListeners();
+    popupConfirmation.openPopup();
+    resolve(popupConfirmation.setEventSumbit())
+  })
 }
-popupConfirmation.setEventListeners()
-confirmationDeletCard()
-
 
 // Класс Api
 const apiNew = new Api(apiConfig);
@@ -51,6 +48,9 @@ Promise.all([apiNew.getInitialCards(), apiNew.getSelfData()])
   .then(([cards, selfData]) => {
     newUserInfo.setUserInfo(selfData)
     cardList.renderItems(cards)
+  })
+  .catch((data)=>{
+    console.log(`Ошибка ${data.status} ${data.textStatus}`)
   })
 
 // Функция принимающая каждый обьект карточки, генерирует возврщает изменения.
