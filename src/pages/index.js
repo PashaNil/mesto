@@ -14,13 +14,14 @@ import { configForm } from "../utils/configForm.js";
 import { Api } from "../components/Api.js";
 import { apiConfig } from "../utils/apiConfig.js";
 
+
 // Попап Сonfirmation
 function confirmationDeletCard (){
-  return new Promise((resolve,reject) =>{
+  return new Promise((resolve) =>{
     const popupConfirmation = new PopupConfirmation(".popup_type_confirmation");
     popupConfirmation.setEventListeners();
     popupConfirmation.openPopup();
-    resolve(popupConfirmation.setEventSumbit())
+    popupConfirmation.onCloseCallback = (submit) => resolve(submit);
   })
 }
 
@@ -49,7 +50,7 @@ Promise.all([apiNew.getInitialCards(), apiNew.getSelfData()])
     newUserInfo.setUserInfo(selfData)
     cardList.renderItems(cards)
   })
-  .catch((data)=>{
+  .catch((data) => {
     console.log(`Ошибка ${data.status} ${data.textStatus}`)
   })
 
@@ -64,16 +65,14 @@ const popupWithImage = new PopupWithImage(".popup_type_card-image");
 function handleCardClick(titleCard, linkImgCard) {
   popupWithImage.openPopup(titleCard, linkImgCard);
 }
-popupWithImage.setEventListeners();
 
 // Работа с формой addCard и отправка карточек на страницу.
 const cardWithForm = new PopupWithForm(".popup_type_add-cards", (itemsCard) => {
-  apiNew.addNewCard(itemsCard)
+  return apiNew.addNewCard(itemsCard)
     .then((data) => {
       cardList.addItem(createCard(data));
     })
 });
-cardWithForm.setEventListeners();
 
 // Открытие попапа Card
 constants.popupBtnAddCards.addEventListener('click', () => {
@@ -83,15 +82,13 @@ constants.popupBtnAddCards.addEventListener('click', () => {
 
 // Передаю попап, нахожу там инпуты, при сабмите выполняется отправка на сервер и обновление профайла
 const infoWithForm = new PopupWithForm(".popup_type_profile", (itemsInfo) => {
-  apiNew.updateProfile(itemsInfo)
-  .then((data)=>{
-    // Применяем изменения на странице
-    //в ней {name, about, avatar, _id, cohort}
-    newUserInfo.setUserInfo(data);
-  })
+  return apiNew.updateProfile(itemsInfo)
+    .then((data) => {
+      // Применяем изменения на странице
+      //в ней {name, about, avatar, _id, cohort}
+      newUserInfo.setUserInfo(data);
+    })
 })
-
-infoWithForm.setEventListeners();
 
 constants.popupBtnEdit.addEventListener('click', () => {
   infoWithForm.openPopup();
@@ -102,14 +99,12 @@ constants.popupBtnEdit.addEventListener('click', () => {
 })
 
 // Обновление аватара
-const avatarWithForm = new PopupWithForm(".popup_type_avatar-edit", (itemsAvatar)=>{
-  apiNew.updateAvatar(itemsAvatar)
-  .then((data)=>{
-    newUserInfo.setUserInfo(data);
-  })
+const avatarWithForm = new PopupWithForm(".popup_type_avatar-edit", (itemsAvatar) => {
+return apiNew.updateAvatar(itemsAvatar)
+    .then((data) => {
+      newUserInfo.setUserInfo(data);
+    })
 })
-
-avatarWithForm.setEventListeners();
 
 constants.popupBtnAvatar.addEventListener('click', () => {
   formValidator["popupFormAvatar"].resetValidation();

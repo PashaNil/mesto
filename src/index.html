@@ -16,11 +16,12 @@
       <section class="profile">
         <div class="profile__container">
           <div class="profile__avatar-container">
-          <img class="profile__avatar" src="<%=require('./images/Avatar.png')%>" alt="Аватар профиля">
-          <button class="profile__avatar-edit" type="button">
-            <img class="profile__avatar-pen" src="<%=require('./images/Avatar-pens.svg')%>" alt="ручка редактирования">
-          </button>
-        </div>
+            <img class="profile__avatar" src="<%=require('./images/Avatar.png')%>" alt="Аватар профиля">
+            <button class="profile__avatar-edit" type="button">
+              <img class="profile__avatar-pen" src="<%=require('./images/Avatar-pens.svg')%>"
+                alt="ручка редактирования">
+            </button>
+          </div>
           <div class="profile__info">
             <h1 class="profile__title"></h1>
             <button class="profile__edit-button opacity-hover" type="button"
@@ -46,8 +47,8 @@
             <input class="popup__input popup__input_type_name" type="text" id="name" name="name" placeholder="Имя"
               minlength="2" maxlength="40" required>
             <span class="popup__input-error name-error"></span>
-            <input class="popup__input popup__input_type_job" type="text" id="job" name="about" placeholder="Род занятий"
-              minlength="2" maxlength="200" required>
+            <input class="popup__input popup__input_type_job" type="text" id="job" name="about"
+              placeholder="Род занятий" minlength="2" maxlength="200" required>
             <span class="popup__input-error job-error"></span>
           </fieldset>
           <button class="popup__button popup__button_disabled" type="submit" aria-label="Сохранить форму"
@@ -96,16 +97,16 @@
     <div class="popup popup_type_avatar-edit">
       <div class="popup__container">
         <button class="popup__close-icon opacity-hover" type="button" aria-label="Закрытие окна"></button>
-          <h2 class="popup__title">Обновить аватар</h2>
-          <form class="popup__form popup__form_type_avatar" name="popupFormAvatar" novalidate>
-            <fieldset class="popup__fieldset">
-              <input class="popup__input popup__input_type_avatar" type="url" id="avatar" name="avatar"
+        <h2 class="popup__title">Обновить аватар</h2>
+        <form class="popup__form popup__form_type_avatar" name="popupFormAvatar" novalidate>
+          <fieldset class="popup__fieldset">
+            <input class="popup__input popup__input_type_avatar" type="url" id="avatar" name="avatar"
               placeholder="Ссылка на изображение" required>
-              <span class="popup__input-error avatar-error"></span>
-            </fieldset>
-            <button class="popup__button popup__button_disabled" type="submit" aria-label="Сохранить форму"
+            <span class="popup__input-error avatar-error"></span>
+          </fieldset>
+          <button class="popup__button popup__button_disabled" type="submit" aria-label="Сохранить форму"
             disabled>Сохранить</button>
-          </form>
+        </form>
       </div>
     </div>
 
@@ -118,11 +119,12 @@
       <div class="element__rectangle">
         <h2 class="element__title"></h2>
         <div class="element__container-like">
-        <button class="element__like-button" type="button"></button>
-        <p class="element__like-number"></p>
+          <button class="element__like-button" type="button"></button>
+          <p class="element__like-number"></p>
         </div>
       </div>
     </article>
   </template>
 </body>
+
 </html>

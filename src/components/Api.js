@@ -11,13 +11,13 @@ export class Api {
       headers: this._headers
     })
       .then((res) => {
-        if(res.ok){
+        if (res.ok) {
           console.log(`Код: ${res.status} Запрос выполнен`)
           return res.json()
         }
         return Promise.reject(`Ошибка: ${res.status}`);
       })
-      .catch((data)=>{
+      .catch((data) => {
         console.log(`Произошла ошибка. Код: ${data.status}`)
       })
   }
@@ -53,7 +53,7 @@ export class Api {
   }
 
   //Обновление аватара
-  updateAvatar(avatarData){
+  updateAvatar(avatarData) {
     const url = this._url + "/users/me/avatar";
     return this._request(url, {
       method: "PATCH",
@@ -78,7 +78,7 @@ export class Api {
   }
 
   // Удаление карточки
-  deletCard(cardId){
+  deletCard(cardId) {
     const url = this._url + `/cards/${cardId}`
     return this._request(url, {
       method: "DELETE"
