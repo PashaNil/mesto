@@ -12,13 +12,10 @@ export class Api {
     })
       .then((res) => {
         if (res.ok) {
-          console.log(`Код: ${res.status} Запрос выполнен`)
+          console.log(`Запрос выполнен. Код: ${res.status} `)
           return res.json()
         }
         return Promise.reject(`Ошибка: ${res.status}`);
-      })
-      .catch((data) => {
-        console.log(`Произошла ошибка. Код: ${data.status}`)
       })
   }
 

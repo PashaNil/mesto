@@ -26,7 +26,7 @@ export default class PopupWithForm extends Popup {
         this.closePopup();
       })
       .finally(() => {
-        this.btnSubmitForm.textContent = "Сохранить форму";
+        this.btnSubmitForm.textContent = "Сохранить";
         this.btnSubmitForm.classList.remove('popup__button_disabled');
       })
     evt.preventDefault();

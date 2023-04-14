@@ -18,11 +18,11 @@ export default class PopupConfirmation extends Popup {
   }
 
   closePopup({ submit = false } = {}) {
-    super.closePopup();
     if (this.onCloseCallback) {
       this.onCloseCallback(submit)
     }
     this.formPopup.removeEventListener('submit', this.popupEventSumbit);
+    super.closePopup();
   }
 
 

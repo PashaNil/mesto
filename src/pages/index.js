@@ -14,17 +14,6 @@ import { configForm } from "../utils/configForm.js";
 import { Api } from "../components/Api.js";
 import { apiConfig } from "../utils/apiConfig.js";
 
-
-// Попап Сonfirmation
-function confirmationDeletCard (){
-  return new Promise((resolve) =>{
-    const popupConfirmation = new PopupConfirmation(".popup_type_confirmation");
-    popupConfirmation.setEventListeners();
-    popupConfirmation.openPopup();
-    popupConfirmation.onCloseCallback = (submit) => resolve(submit);
-  })
-}
-
 // Класс Api
 const apiNew = new Api(apiConfig);
 
@@ -50,13 +39,39 @@ Promise.all([apiNew.getInitialCards(), apiNew.getSelfData()])
     newUserInfo.setUserInfo(selfData)
     cardList.renderItems(cards)
   })
-  .catch((data) => {
-    console.log(`Ошибка ${data.status} ${data.textStatus}`)
+  .catch((err) => {
+    console.log(`Ошибка запроса ${err}`)
   })
 
 // Функция принимающая каждый обьект карточки, генерирует возврщает изменения.
 function createCard(cardData) {
-  return new Card(cardData, constants.templateElement, handleCardClick, apiNew, newUserInfo, confirmationDeletCard).generateCard();
+  return new Card(cardData, constants.templateElement, handleCardClick, callbackLikeApi, newUserInfo, confirmationDeletCard).generateCard();
+}
+
+// Функция коллбек из Card
+// Обрабатывает запросы на действие с лайком и возвращает промис с ответом.
+function callbackLikeApi(answer, idСards) {
+  return new Promise((resolve, reject) => {
+    if (answer) {
+      apiNew.deletLikeNumber(idСards)
+        .then((data) => {
+          return resolve(data)
+        })
+        .catch((err) => {
+          console.log(`Ошибка запроса: ${err}`)
+          return reject()
+        })
+    } else {
+      apiNew.addLikeNumber(idСards)
+        .then((data) => {
+          return resolve(data)
+        })
+        .catch((err) => {
+          console.log(`Ошибка запроса: ${err}`)
+          return reject()
+        })
+    }
+  })
 }
 
 // Функция открываяющая попап figure, принимающая с класса Card данные слушателя.
@@ -72,14 +87,42 @@ const cardWithForm = new PopupWithForm(".popup_type_add-cards", (itemsCard) => {
     .then((data) => {
       cardList.addItem(createCard(data));
     })
+    .catch((err) => {
+      console.log(`Ошибка запроса ${err}`)
+    })
 });
 
 // Открытие попапа Card
+// Слушатель кнопки страницы, открывает окно и сбрасывает валидацию.
 constants.popupBtnAddCards.addEventListener('click', () => {
   cardWithForm.openPopup();
   formValidator["popupFormCards"].resetValidation();
 })
 
+// Попап Сonfirmation
+// Колбек функция Card, которая вызывает попап подверждения и возвращает промис с результатом ответа от сервера.
+function confirmationDeletCard(idCard) {
+  return new Promise((resolve, reject) => {
+    const popupConfirmation = new PopupConfirmation(".popup_type_confirmation");
+    popupConfirmation.setEventListeners();
+    popupConfirmation.openPopup();
+    popupConfirmation.onCloseCallback = function (submitChoice) { // true или false
+      if (submitChoice) {
+        apiNew.deletCard(idCard)
+          .then((data) => {
+            console.log(data.message)
+            return resolve()
+          })
+          .catch((err) => {
+            console.log(`Ошибка запроса: ${err}`)
+            return reject()
+          })
+      }
+    }
+  })
+}
+
+// Данные пользователя
 // Передаю попап, нахожу там инпуты, при сабмите выполняется отправка на сервер и обновление профайла
 const infoWithForm = new PopupWithForm(".popup_type_profile", (itemsInfo) => {
   return apiNew.updateProfile(itemsInfo)
@@ -87,6 +130,9 @@ const infoWithForm = new PopupWithForm(".popup_type_profile", (itemsInfo) => {
       // Применяем изменения на странице
       //в ней {name, about, avatar, _id, cohort}
       newUserInfo.setUserInfo(data);
+    })
+    .catch((err) => {
+      console.log(`Ошибка запроса: ${err}`)
     })
 })
 
@@ -100,9 +146,12 @@ constants.popupBtnEdit.addEventListener('click', () => {
 
 // Обновление аватара
 const avatarWithForm = new PopupWithForm(".popup_type_avatar-edit", (itemsAvatar) => {
-return apiNew.updateAvatar(itemsAvatar)
+  return apiNew.updateAvatar(itemsAvatar)
     .then((data) => {
       newUserInfo.setUserInfo(data);
+    })
+    .catch((err) => {
+      console.log(`Ошибка запроса: ${err}`)
     })
 })
 
@@ -126,7 +175,7 @@ function enableValidation() {
   })
 }
 
-
 // Вызов функции активации валидации.
 enableValidation();
 
+// Danilov Pavel 2023
