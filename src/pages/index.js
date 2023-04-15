@@ -83,12 +83,12 @@ const cardWithForm = new PopupWithForm(".popup_type_add-cards", (thisPopup, evt,
   apiNew.addNewCard(values)
     .then((data) => {
       cardList.addItem(createCard(data));
+      thisPopup.closePopup();
     })
     .catch((err) => {
       console.log(`Ошибка запроса ${err}`)
     })
     .finally(() => {
-      thisPopup.closePopup();
       thisPopup.setInitialSubmitterStatus(evt, "Создать");
     })
 });
@@ -112,12 +112,10 @@ function confirmationDeletCard(card) {
         .then((data) => { // При положительном ответе от сервера
           card.removeDOMElement()
           console.log(data.message)
+          popupConfirmation.closePopup();
         })
         .catch((err) => {
           console.log(`Ошибка запроса: ${err}`)
-        })
-        .finally(() => {
-          popupConfirmation.closePopup();
         })
     }
   }
@@ -132,12 +130,12 @@ const infoWithForm = new PopupWithForm(".popup_type_profile", (thisPopup, evt, v
       // Применяем изменения на странице
       //в ней {name, about, avatar, _id, cohort}
       newUserInfo.setUserInfo(data);
+      thisPopup.closePopup();
     })
     .catch((err) => {
       console.log(`Ошибка запроса: ${err}`)
     })
     .finally(() => {
-      thisPopup.closePopup();
       thisPopup.setInitialSubmitterStatus(evt, "Сохранить")
     })
 })
@@ -156,12 +154,12 @@ const avatarWithForm = new PopupWithForm(".popup_type_avatar-edit", (thisPopup, 
   apiNew.updateAvatar(valueAvatar)
     .then((data) => {
       newUserInfo.setUserInfo(data);
+      thisPopup.closePopup();
     })
     .catch((err) => {
       console.log(`Ошибка запроса: ${err}`)
     })
     .finally(() => {
-      thisPopup.closePopup();
       thisPopup.setInitialSubmitterStatus(evt, "Сохранить")
     })
 })
