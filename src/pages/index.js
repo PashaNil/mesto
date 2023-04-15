@@ -89,7 +89,7 @@ const cardWithForm = new PopupWithForm(".popup_type_add-cards", (thisPopup, evt,
     })
     .finally(()=>{
       thisPopup.closePopup();
-      thisPopup.setInitialSubmitterStatus(evt, "Сохранить");
+      thisPopup.setInitialSubmitterStatus(evt, "Создать");
     })
 });
 
