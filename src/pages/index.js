@@ -116,6 +116,9 @@ function confirmationDeletCard(card) {
         .catch((err) => {
           console.log(`Ошибка запроса: ${err}`)
         })
+        .finally(()=>{
+          popupConfirmation.closePopup();
+        })
     }
   }
 }
