@@ -51,23 +51,23 @@ function createCard(cardData) {
 // Функция коллбек из Card
 // Обрабатывает запросы на действие с лайком
 function callbackLikeApi(answer, thisCard) {
-    if (answer) {
-      apiNew.deletLikeNumber(thisCard.idCard)
-        .then((data) => {
-          thisCard.removeLike(data)
-        })
-        .catch((err) => {
-          console.log(`Ошибка запроса: ${err}`)
-        })
-    } else {
-      apiNew.addLikeNumber(thisCard.idCard)
-        .then((data) => {
-          thisCard.setLike(data)
-        })
-        .catch((err) => {
-          console.log(`Ошибка запроса: ${err}`)
-        })
-    }
+  if (answer) {
+    apiNew.deletLikeNumber(thisCard.idCard)
+      .then((data) => {
+        thisCard.removeLike(data)
+      })
+      .catch((err) => {
+        console.log(`Ошибка запроса: ${err}`)
+      })
+  } else {
+    apiNew.addLikeNumber(thisCard.idCard)
+      .then((data) => {
+        thisCard.setLike(data)
+      })
+      .catch((err) => {
+        console.log(`Ошибка запроса: ${err}`)
+      })
+  }
 }
 
 // Функция открываяющая попап figure, принимающая с класса Card данные слушателя.
@@ -80,14 +80,14 @@ function handleCardClick(titleCard, linkImgCard) {
 // Работа с формой addCard и отправка карточек на страницу.
 const cardWithForm = new PopupWithForm(".popup_type_add-cards", (thisPopup, evt, values) => {
   thisPopup.setPendingSubmitterStatus(evt, "Сохранение...");
-   apiNew.addNewCard(values)
+  apiNew.addNewCard(values)
     .then((data) => {
       cardList.addItem(createCard(data));
     })
     .catch((err) => {
       console.log(`Ошибка запроса ${err}`)
     })
-    .finally(()=>{
+    .finally(() => {
       thisPopup.closePopup();
       thisPopup.setInitialSubmitterStatus(evt, "Создать");
     })
@@ -106,8 +106,8 @@ function confirmationDeletCard(card) {
   const popupConfirmation = new PopupConfirmation(".popup_type_confirmation");
   popupConfirmation.setEventListeners();
   popupConfirmation.openPopup();
-  popupConfirmation.onCloseCallback = function (submitChoice) { // true или false
-    if (submitChoice) {
+  popupConfirmation.onCloseCallback = function ({ submit = false } = {}) { // true или false
+    if (submit) {
       apiNew.deletCard(card.idCard)
         .then((data) => { // При положительном ответе от сервера
           card.removeDOMElement()
@@ -116,7 +116,7 @@ function confirmationDeletCard(card) {
         .catch((err) => {
           console.log(`Ошибка запроса: ${err}`)
         })
-        .finally(()=>{
+        .finally(() => {
           popupConfirmation.closePopup();
         })
     }
@@ -127,7 +127,7 @@ function confirmationDeletCard(card) {
 // Передаю попап, нахожу там инпуты, при сабмите выполняется отправка на сервер и обновление профайла
 const infoWithForm = new PopupWithForm(".popup_type_profile", (thisPopup, evt, valuesInfo) => {
   thisPopup.setPendingSubmitterStatus(evt, "Сохранение...");
-   apiNew.updateProfile(valuesInfo)
+  apiNew.updateProfile(valuesInfo)
     .then((data) => {
       // Применяем изменения на странице
       //в ней {name, about, avatar, _id, cohort}
@@ -136,7 +136,7 @@ const infoWithForm = new PopupWithForm(".popup_type_profile", (thisPopup, evt, v
     .catch((err) => {
       console.log(`Ошибка запроса: ${err}`)
     })
-    .finally(()=>{
+    .finally(() => {
       thisPopup.closePopup();
       thisPopup.setInitialSubmitterStatus(evt, "Сохранить")
     })
@@ -160,7 +160,7 @@ const avatarWithForm = new PopupWithForm(".popup_type_avatar-edit", (thisPopup, 
     .catch((err) => {
       console.log(`Ошибка запроса: ${err}`)
     })
-    .finally(()=>{
+    .finally(() => {
       thisPopup.closePopup();
       thisPopup.setInitialSubmitterStatus(evt, "Сохранить")
     })

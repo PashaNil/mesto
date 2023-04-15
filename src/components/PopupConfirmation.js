@@ -14,16 +14,20 @@ export default class PopupConfirmation extends Popup {
 
   popupEventSumbit(evt) {
     evt.preventDefault();
-    this._processingChoice({ submit: true })
+    /*     this._processingChoice({ submit: true }) */
+    this.onCloseCallback({ submit: true })
   }
 
-  _processingChoice({ submit = false } = {}) {
-    if (this.onCloseCallback) {
-      this.onCloseCallback(submit)
-    }
+  /*   _processingChoice({ submit = false } = {}) {
+      if (this.onCloseCallback) {
+        this.onCloseCallback(submit)
+      }
+    } */
+
+  closePopup() {
+    super.closePopup();
     this.formPopup.removeEventListener('submit', this.popupEventSumbit);
   }
-
 
 
 }
