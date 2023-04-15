@@ -49,29 +49,25 @@ function createCard(cardData) {
 }
 
 // Функция коллбек из Card
-// Обрабатывает запросы на действие с лайком и возвращает промис с ответом.
-function callbackLikeApi(answer, idСards) {
-  return new Promise((resolve, reject) => {
+// Обрабатывает запросы на действие с лайком
+function callbackLikeApi(answer, thisCard) {
     if (answer) {
-      apiNew.deletLikeNumber(idСards)
+      apiNew.deletLikeNumber(thisCard.idCard)
         .then((data) => {
-          return resolve(data)
+          thisCard.removeLike(data)
         })
         .catch((err) => {
           console.log(`Ошибка запроса: ${err}`)
-          return reject()
         })
     } else {
-      apiNew.addLikeNumber(idСards)
+      apiNew.addLikeNumber(thisCard.idCard)
         .then((data) => {
-          return resolve(data)
+          thisCard.setLike(data)
         })
         .catch((err) => {
           console.log(`Ошибка запроса: ${err}`)
-          return reject()
         })
     }
-  })
 }
 
 // Функция открываяющая попап figure, принимающая с класса Card данные слушателя.
@@ -82,13 +78,18 @@ function handleCardClick(titleCard, linkImgCard) {
 }
 
 // Работа с формой addCard и отправка карточек на страницу.
-const cardWithForm = new PopupWithForm(".popup_type_add-cards", (itemsCard) => {
-  return apiNew.addNewCard(itemsCard)
+const cardWithForm = new PopupWithForm(".popup_type_add-cards", (thisPopup, evt, values) => {
+  thisPopup.setPendingSubmitterStatus(evt, "Сохранение...");
+   apiNew.addNewCard(values)
     .then((data) => {
       cardList.addItem(createCard(data));
     })
     .catch((err) => {
       console.log(`Ошибка запроса ${err}`)
+    })
+    .finally(()=>{
+      thisPopup.closePopup();
+      thisPopup.setInitialSubmitterStatus(evt, "Сохранить");
     })
 });
 
@@ -100,32 +101,30 @@ constants.popupBtnAddCards.addEventListener('click', () => {
 })
 
 // Попап Сonfirmation
-// Колбек функция Card, которая вызывает попап подверждения и возвращает промис с результатом ответа от сервера.
-function confirmationDeletCard(idCard) {
-  return new Promise((resolve, reject) => {
-    const popupConfirmation = new PopupConfirmation(".popup_type_confirmation");
-    popupConfirmation.setEventListeners();
-    popupConfirmation.openPopup();
-    popupConfirmation.onCloseCallback = function (submitChoice) { // true или false
-      if (submitChoice) {
-        apiNew.deletCard(idCard)
-          .then((data) => {
-            console.log(data.message)
-            return resolve()
-          })
-          .catch((err) => {
-            console.log(`Ошибка запроса: ${err}`)
-            return reject()
-          })
-      }
+// Колбек функция Card, которая вызывает попап подверждения и делает запрос api на удаление карточки.
+function confirmationDeletCard(card) {
+  const popupConfirmation = new PopupConfirmation(".popup_type_confirmation");
+  popupConfirmation.setEventListeners();
+  popupConfirmation.openPopup();
+  popupConfirmation.onCloseCallback = function (submitChoice) { // true или false
+    if (submitChoice) {
+      apiNew.deletCard(card.idCard)
+        .then((data) => { // При положительном ответе от сервера
+          card.removeDOMElement()
+          console.log(data.message)
+        })
+        .catch((err) => {
+          console.log(`Ошибка запроса: ${err}`)
+        })
     }
-  })
+  }
 }
 
 // Данные пользователя
 // Передаю попап, нахожу там инпуты, при сабмите выполняется отправка на сервер и обновление профайла
-const infoWithForm = new PopupWithForm(".popup_type_profile", (itemsInfo) => {
-  return apiNew.updateProfile(itemsInfo)
+const infoWithForm = new PopupWithForm(".popup_type_profile", (thisPopup, evt, valuesInfo) => {
+  thisPopup.setPendingSubmitterStatus(evt, "Сохранение...");
+   apiNew.updateProfile(valuesInfo)
     .then((data) => {
       // Применяем изменения на странице
       //в ней {name, about, avatar, _id, cohort}
@@ -133,6 +132,10 @@ const infoWithForm = new PopupWithForm(".popup_type_profile", (itemsInfo) => {
     })
     .catch((err) => {
       console.log(`Ошибка запроса: ${err}`)
+    })
+    .finally(()=>{
+      thisPopup.closePopup();
+      thisPopup.setInitialSubmitterStatus(evt, "Сохранить")
     })
 })
 
@@ -145,13 +148,18 @@ constants.popupBtnEdit.addEventListener('click', () => {
 })
 
 // Обновление аватара
-const avatarWithForm = new PopupWithForm(".popup_type_avatar-edit", (itemsAvatar) => {
-  return apiNew.updateAvatar(itemsAvatar)
+const avatarWithForm = new PopupWithForm(".popup_type_avatar-edit", (thisPopup, evt, valueAvatar) => {
+  thisPopup.setPendingSubmitterStatus(evt, "Сохранение...");
+  apiNew.updateAvatar(valueAvatar)
     .then((data) => {
       newUserInfo.setUserInfo(data);
     })
     .catch((err) => {
       console.log(`Ошибка запроса: ${err}`)
+    })
+    .finally(()=>{
+      thisPopup.closePopup();
+      thisPopup.setInitialSubmitterStatus(evt, "Сохранить")
     })
 })
 

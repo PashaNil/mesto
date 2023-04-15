@@ -14,7 +14,7 @@ export default class Popup {
   closePopup(){
     this._popupElement.classList.remove("popup_opened");
     document.removeEventListener("keydown", this._handleEscClose);
-    this._popupElement.removeEventListener("mousedown", this._closeOverlayCross)
+    this._popupElement.removeEventListener("mousedown", this._closeOverlayCross);
   }
   // Механизм слушателя нажатия клавиши в попапах.
   _handleEscClose(evt){
@@ -29,12 +29,13 @@ export default class Popup {
     }
   }
 
-  // Слушатель попапа на нажатие по крестики или оверлею.
-/*   setEventListeners(){
-    this._popupElement.addEventListener("mousedown", (evt) => {
-      if (evt.target.classList.contains("popup_opened") || evt.target.classList.contains('popup__close-icon')) {
-        this.closePopup();
-      }
-    })
-  } */
+  setPendingSubmitterStatus(evt, text){
+    evt.submitter.textContent = text;
+    evt.submitter.classList.add('popup__button_disabled');
+  }
+
+  setInitialSubmitterStatus(evt, text){
+    evt.submitter.textContent = text;
+    evt.submitter.classList.remove('popup__button_disabled');
+  }
 }

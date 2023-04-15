@@ -18,18 +18,8 @@ export default class PopupWithForm extends Popup {
   }
 
   _processingSubmitEvent(evt) {
-    this.btnSubmitForm = evt.submitter;
-    this.btnSubmitForm.textContent = "Сохранение...";
-    this.btnSubmitForm.classList.add('popup__button_disabled');
-    this.onSubmitFormCallback(this._getInputValues())
-      .then(() => {
-        this.closePopup();
-      })
-      .finally(() => {
-        this.btnSubmitForm.textContent = "Сохранить";
-        this.btnSubmitForm.classList.remove('popup__button_disabled');
-      })
     evt.preventDefault();
+    this.onSubmitFormCallback(this, evt, this._getInputValues())
   }
 
   openPopup() {

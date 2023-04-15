@@ -50,15 +50,13 @@ export class Card {
 
   // Удаление карточки,
   _removeCard() {
-    this.confirmationDeletCard(this.idCard) // Вызов внешней функции с попапом подтверждения
-      .then(() => { // При положительном ответе от сервера
-        this._element.remove();
-        this._element = null;
-      })
-      .catch(() => {
-        console.log("Удаление не выполнено")
-      })
+    this.confirmationDeletCard(this) // Вызов внешней функции с попапом подтверждения
   };
+
+  removeDOMElement(){
+    this._element.remove();
+    this._element = null;
+  }
 
   // Отображение корзины в карточке
   // Если id создателя карточки равно моему, то элем корзины, если нет, то возвращает ее невидимой.
@@ -72,39 +70,27 @@ export class Card {
   }
 
   // Вызывается при нажатии лайка.
-  // Если isLiked возвращает значение, то вызывает api удаления карточки.
+  // Вызывает колбек функцию, _isLiked проверяет лайк.
   _toggleLike() {
-
-    if (this.isLiked()) {
-      this.callbackLikeApi(true, this.idCard)
-        .then((data) => {
-          this._elementLikeNumber.textContent = data.likes.length;
-          this._likesCardArr = data.likes
-          this._buttonLike.classList.toggle("element__like-button_active");
-          console.log("Лайк удален")
-        })
-        .catch(() => {
-          console.log("Не удалось удалить лайк")
-        })
-    } else {
-      this.callbackLikeApi(false, this.idCard)
-        .then((data) => {
-          this._elementLikeNumber.textContent = data.likes.length;
-          this._likesCardArr = data.likes
-          this._buttonLike.classList.toggle("element__like-button_active");
-          console.log("Лайк поставлен")
-        })
-        .catch(() => {
-          console.log("Не удалось поставить лайк")
-        })
-
-    }
+    this.callbackLikeApi(this._isLiked(), this)
   }
 
-  // Если isLiked вернет значение, то добавит активный лайк.
+  removeLike(data){
+    this._elementLikeNumber.textContent = data.likes.length;
+    this._likesCardArr = data.likes
+    this._buttonLike.classList.toggle("element__like-button_active");
+  }
+
+  setLike(data){
+    this._elementLikeNumber.textContent = data.likes.length;
+    this._likesCardArr = data.likes
+    this._buttonLike.classList.toggle("element__like-button_active");
+  }
+
+  // Если _isLiked вернет значение, то добавит активный лайк.
   // В любом случае счетчику лайков задаст количество строк в массиве likesCardArr.
   _initLikes() {
-    if (this.isLiked()) {
+    if (this._isLiked()) {
       this._buttonLike.classList.toggle("element__like-button_active");
     }
     this._elementLikeNumber.textContent = this._likesCardArr.length;
@@ -112,7 +98,7 @@ export class Card {
 
   // Переберает массив с лайкнувшими карточку
   // Если в карточке есть совпадения с моим id, то вернет значение.
-  isLiked() {
+  _isLiked() {
     return this._likesCardArr.find((likeInfo) => {
       return likeInfo._id === this._userInfo._info._id
     })
